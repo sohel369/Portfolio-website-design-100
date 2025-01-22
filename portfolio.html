@@ -1354,15 +1354,145 @@
             }
         }
     </style>
+
+    <style>
+        /* Enhanced Custom Mouse Pointer Animations */
+        .custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #FF69B4;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s;
+            animation: cursorPulse 2s infinite;
+        }
+
+        .cursor-dot {
+            width: 4px;
+            height: 4px;
+            background: #FF69B4;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.15s ease-out, width 0.15s ease-out, height 0.15s ease-out, background 0.3s;
+            animation: dotPulse 2s infinite;
+        }
+
+        /* Pulse Animation for Main Cursor */
+        @keyframes cursorPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 105, 180, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 105, 180, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 105, 180, 0);
+            }
+        }
+
+        /* Pulse Animation for Cursor Dot */
+        @keyframes dotPulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.5);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        /* Hover Effects */
+        .custom-cursor.hover {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 105, 180, 0.1);
+            border-color: #FF69B4;
+            animation: cursorHoverPulse 1s infinite;
+            mix-blend-mode: normal;
+        }
+
+        .cursor-dot.hover {
+            width: 0;
+            height: 0;
+            animation: none;
+        }
+
+        /* Hover Pulse Animation */
+        @keyframes cursorHoverPulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        /* Click Animation Classes */
+        .custom-cursor.clicking {
+            animation: cursorClick 0.5s;
+        }
+
+        .cursor-dot.clicking {
+            animation: dotClick 0.5s;
+        }
+
+        /* Click Animations */
+        @keyframes cursorClick {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes dotClick {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .custom-cursor,
+            .cursor-dot {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Custom Cursor Elements -->
+    <div class="custom-cursor"></div>
+    <div class="cursor-dot"></div>
+
     <header class="header">
         <nav class="nav-container">
             <a href="#" class="logo">
                 <svg class="logo-img" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M25 5L5 25L25 45L45 25L25 5Z" stroke="#3498db" stroke-width="2"/>
-                    <path d="M25 15L15 25L25 35L35 25L25 15Z" fill="#2c3e50"/>
+                    <path d="M25 5L5 25L25 45L45 25L25 5Z" stroke="#3498db" stroke-width="2" />
+                    <path d="M25 15L15 25L25 35L35 25L25 15Z" fill="#2c3e50" />
                 </svg>
                 <span class="logo-text">Portfolio</span>
             </a>
@@ -1971,7 +2101,8 @@
         </style>
         <div class="newsletter-container" data-aos="zoom-in" data-aos-delay="100">
             <h2 class="newsletter-title">Subscribe to Our Newsletter</h2>
-            <p class="newsletter-description">Stay updated with our latest projects, design tips, and industry insights.</p>
+            <p class="newsletter-description">Stay updated with our latest projects, design tips, and industry insights.
+            </p>
             <form class="newsletter-form">
                 <input type="email" class="newsletter-input" placeholder="Enter your email address" required>
                 <button type="submit" class="newsletter-button">Subscribe Now</button>
@@ -2265,9 +2396,11 @@
             0% {
                 transform: translateY(0px);
             }
+
             50% {
                 transform: translateY(-20px);
             }
+
             100% {
                 transform: translateY(0px);
             }
@@ -2311,6 +2444,76 @@
             box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
         }
     </style>
+
+    <script>
+        const cursor = document.querySelector('.custom-cursor');
+        const cursorDot = document.querySelector('.cursor-dot');
+        let cursorX = 0;
+        let cursorY = 0;
+        let dotX = 0;
+        let dotY = 0;
+
+        // Smooth cursor movement
+        function updateCursorPosition() {
+            const dx = cursorX - dotX;
+            const dy = cursorY - dotY;
+            
+            dotX += dx * 0.2;
+            dotY += dy * 0.2;
+            
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            cursorDot.style.left = dotX + 'px';
+            cursorDot.style.top = dotY + 'px';
+            
+            requestAnimationFrame(updateCursorPosition);
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            cursorX = e.clientX;
+            cursorY = e.clientY;
+        });
+
+        // Click animation
+        document.addEventListener('mousedown', () => {
+            cursor.classList.add('clicking');
+            cursorDot.classList.add('clicking');
+        });
+
+        document.addEventListener('mouseup', () => {
+            cursor.classList.remove('clicking');
+            cursorDot.classList.remove('clicking');
+        });
+
+        // Hover effects for interactive elements
+        const hoverElements = document.querySelectorAll('a, button, .project-box, .skill-item, .social-links a, .nav-link, input, textarea');
+        
+        hoverElements.forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                cursor.classList.add('hover');
+                cursorDot.classList.add('hover');
+            });
+            
+            element.addEventListener('mouseleave', () => {
+                cursor.classList.remove('hover');
+                cursorDot.classList.remove('hover');
+            });
+        });
+
+        // Hide cursor when leaving window
+        document.addEventListener('mouseleave', () => {
+            cursor.style.opacity = '0';
+            cursorDot.style.opacity = '0';
+        });
+
+        document.addEventListener('mouseenter', () => {
+            cursor.style.opacity = '1';
+            cursorDot.style.opacity = '1';
+        });
+
+        // Start the animation loop
+        updateCursorPosition();
+    </script>
 </body>
 
 </html>
